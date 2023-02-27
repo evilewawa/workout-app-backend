@@ -1,0 +1,47 @@
+https://www.youtube.com/watch?v=mrHNSanmqQ4&ab_channel=freeCodeCamp.org <- MERN stack tutorial
+
+
+App Ideas and how to implement:
+Front end React Native Application -> Backend Accessing MongoDB Cluster -> Front end React Web UI
+Data inputted throught App, stored in Mongo Cluster, accessed by the web page
+
+Backend first:
+Ideally the data is stored in objects that look like this - 
+_id: id of individual entry
+exercise_name: name of exercise
+weight: Int (not necessarily postive becuase for example if using exercise band on pullup then its negative)
+date: mongo date object <- year, month, date, hour, minute minimum
+sets: Arr[Int]
+userID: Int (0 for me)
+
+^ this means each indivdual excersize is stored in a seperate object and workouts are now grouped together but can be grouped via date
+
+this means i will need to:
+- make environment variables
+> the database should point to the collection named workouts
+
+- create a workoutsDAO that will 
+> get all workouts with filters for date and exercise_name (backend access kinda)
+> get all workouts by name (front end access) 
+> get all workouts by date (front end access)
+^ all these will filter by ID as well
+
+- create a workouts.route that will
+> have a general route that shows the basic React frontend
+> have a sub route that shows by workout 
+> have a sub route that shows by date
+> have a route for posting, updating, deleting 
+
+- create a workout controller that will
+> connect the route and DAO
+
+- change server.js and index.js 
+
+
+
+
+
+
+
+
+
