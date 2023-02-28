@@ -13,4 +13,10 @@ router.route("/")
     //delete
     .delete(workoutsController.deleteWorkout)
 
+router.route("/getWorkoutNames").get(workoutsController.getAllWorkoutNames)
+router.route("/:userID/:exercise_name").get(workoutsController.getSpecificWorkoutsByUserID)
+
+router.route("/:userID").get(workoutsController.getAllWorkoutsByUserID)
+
+
 module.exports = router

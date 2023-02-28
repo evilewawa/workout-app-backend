@@ -16,15 +16,45 @@ const getAllWorkouts = asyncHandler(async (req, res) => {
     res.json(workouts)
 })
 
+const getAllWorkoutNames = asyncHandler( async (req,res) => {
+    const exercise_names = await Workout.distinct("exercise_name")
+    res.json(exercise_names)
+})
+
+const getAllWorkoutsByUserID = asyncHandler( async (req, res) => {
+    let userID = req.params.userID || {}
+    const pipeline = [{$match:{userID:parseInt(userID)}}]
+
+    // console.log(userID)
+    // let exercise_name = req.params.exercise_name || {}
+    const workouts = await Workout.aggregate(pipeline)
+
+    // console.log(workouts)
+    if (!workouts){
+        return res.status(400).json({message:"Userid not found"})
+    }
+    res.json( workouts)
+})
+const getSpecificWorkoutsByUserID = asyncHandler (async (req,res) => {
+    let userID = req.params.userID || {}
+    let exercise_name = req.params.exercise_name || {}
+    // console.log("printing the worng thing")
+    let workouts = await Workout.find({exercise_name:exercise_name,userID:userID}).lean()
+    if (!workouts){
+        return res.status(400).json({message:"Userid or exercise name not found"})
+    }
+    res.json( workouts)
+})
+
 //@desc create new workout
 // @route POST /workouts
 // @access Private
 const createNewWorkout = asyncHandler(async (req, res) => {
     const {exercise_name, weight, sets, userID} = req.body
 
-    if (!exercise_name || !weight || !sets || (!userID) || !Array.isArray(sets) || !sets.length){
+    if (!exercise_name || (!weight  && weight !==0) || !sets || (!userID) || !Array.isArray(sets) || !sets.length){
         console.log(exercise_name, weight, sets, userID)
-        return res.status(400).json({message:"All feilds are required"})
+        return res.status(400).json({message:"All fields are required"})
     }
     // duplicate checker would go here via Workout.findOne({feild}).lean().exec() but not neccessary for me right now
     // bcrypt would be used for password 
@@ -78,9 +108,13 @@ const deleteWorkout = asyncHandler(async (req, res) => {
     res.json(reply)
 })
 
+
 module.exports = {
     getAllWorkouts,
     createNewWorkout,
     updateWorkout,
-    deleteWorkout
+    deleteWorkout,
+    getAllWorkoutNames,
+    getAllWorkoutsByUserID,
+    getSpecificWorkoutsByUserID
 }
